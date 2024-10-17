@@ -71,24 +71,16 @@ int main()
 #define DISCOUNT_MEMBER_PERCENTAGE 0.25f
 
     /* Variables */
-    unsigned short carsAvailable = 10, carsNeeded = 0, giveDiscount = 0;
-    float totalPrice = 0.0f, discountValue;
-    char isMemberOfCarClub;
-    char firstName[20], lastName[20], userChoice;
-    int userAge;
+    unsigned short carsAvailable = 10;
+    // defining each variable independently allows us to add comments
+    unsigned short arsNeeded = 0;
+    // It also helps us when refactoring our code, we only get to touch a single line
+    unsigned short giveDiscount = 0;
 
-    printf("Enter your first name: "); //This asks user for name and age//
-    
-    scanf("%s", firstName);
-    
-    printf("Enter your last name: ");
-    scanf("%s", lastName);
-    
-    printf("Enter your age. Age: ");
-    scanf("%d", &userAge);
-    
-    printf("Hello %s, Welcome to the Car Sales office!\n\n", firstName);
-    
+    // A function to get user details
+    get_user_details();
+
+    // Potential candiate for a menu function??
     printf("Menu:\n");
     printf("a. Buy Cars\n");
     printf("b. View Sales Stats\n");
