@@ -63,7 +63,7 @@ Discount apply_discount(char club_member, float *totalPrice, int carsNeeded, flo
 
 int main()
 {
-    
+
     /* Constants */
 #define CAR_PRICE 20500.0f
 #define DISCOUNT_MULTIBUY_PERCENTAGE 0.20f
@@ -85,14 +85,12 @@ int main()
     printf("a. Buy Cars\n");
     printf("b. View Sales Stats\n");
     printf("x. Exit\n\n");
-    
-    
 
     /* Stock info */
     if (carsAvailable > 0)
     {
         printf("We have %hd cars available. Each car costs %.2f.\n\n",
-               carsAvailable, CAR_PRICE);
+               carsAvailable, car_price);
     }
     else
     {
@@ -101,8 +99,10 @@ int main()
     }
 
     /* Prompt cars needed */
-    printf("How many cars would you like to buy? Amount: ");
-    scanf("%hd", &carsNeeded);
+    char quantity[2];
+    const char *quantityPrompt = "How many cars would you like to buy? Amount: ";
+    get_input_with_prompt(quantityPrompt, quantity);
+    carsNeeded = atoi(quantity);
 
     /* Check available stock */
     if (carsAvailable < carsNeeded)
@@ -112,43 +112,29 @@ int main()
     }
 
     /* Calculate full price & update stock */
-    totalPrice = carsNeeded * CAR_PRICE;
+    float totalPrice = carsNeeded * car_price;
     carsAvailable -= carsNeeded;
 
     /* Start discount checks */
-    printf("\nAre you a member of the Car Club? Answer (Y/N) = ");
-    scanf("\n%c", &isMemberOfCarClub);
+    char isMemberOfCarClub;
+    const char *carClubMemberPrompt = "\nAre you a member of the Car Club? Answer (Y/N) = ";
+    get_input_with_prompt(carClubMemberPrompt, isMemberOfCarClub);
 
-    // check if member discount needs to be applied
-    //        first because % is greater
-    if (isMemberOfCarClub == 'Y')
-    {
-        giveDiscount = 1;
-        totalPrice *= (1 - DISCOUNT_MEMBER_PERCENTAGE);
-        discountValue = DISCOUNT_MEMBER_PERCENTAGE;
-    }
-        // otherwise, check multibuy discount
-    else if (carsNeeded >= DISCOUNT_MULTIBUY_AMOUNT)
-    {
-        giveDiscount = 1;
-        totalPrice *= (1 - DISCOUNT_MULTIBUY_PERCENTAGE);
-        discountValue = DISCOUNT_MULTIBUY_PERCENTAGE;
-    }
+    // Applies a discount for car club members or multibuy discount
+    // takes in the total price, the number of cars needed, and the discount percentage
+    // returns a discount struct with the discount applied and the value of the discount
+    // we also mutate totalPrice slightly different to show how we can pass mutable values to a function
+    Discount discount = apply_discount(isMemberOfCarClub, &totalPrice, carsNeeded, DISCOUNT_MEMBER_PERCENTAGE, DISCOUNT_MULTIBUY_PERCENTAGE);
 
     /* Present discount outcome */
-    switch (giveDiscount)
+    if (discount.applied)
     {
-        case 1:
-            // convert from 0.2 format to 20% format
-            discountValue *= 100;
-            // hide decimals, not needed
-            printf("\nDiscount of %.0f%% applied!\n", discountValue);
-            break;
-        case 0:
-            printf("\nDiscount not applied.\n");
-            break;
+        printf("\nDiscount of %.0f%% applied!\n", discount.value * 100);
     }
-
+    else
+    {
+        printf("\nDiscount not applied.\n");
+    }
     /* Present final outcome */
     printf("\nThank you for your custom.\n");
     printf("\nYou have bought %hd cars. Total price to pay is %.2f.",
