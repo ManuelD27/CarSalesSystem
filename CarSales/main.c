@@ -1,6 +1,68 @@
 #include <stdio.h>
 
-int main(){
+// #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void get_user_details()
+{
+    // This asks user for name and age//
+    char firstName[20];
+    const char *firstNamePrompt = "Enter your first name: ";
+    get_input_with_prompt(firstNamePrompt, firstName);
+
+    const char *lastNamePrompt = "Enter your last name: ";
+    char lastName[20];
+    get_input_with_prompt(firstNamePrompt, lastName);
+
+    const char *agePrompt = "Enter your age. Age: ";
+    char age[2];
+    get_input_with_prompt(agePrompt, age);
+    int userAge = atoi(age);
+
+    printf("Hello %s, %s, Welcome to the Car Sales office!\n\n", firstName, lastName);
+}
+
+void get_input_with_prompt(const char *prompt, char *input)
+{
+    // 1. Print the prompt
+    printf("%s", prompt);
+
+    // 2. Read the input and write it to the input buffer
+    scanf("%s", input);
+}
+
+// A struct to hold the discount information
+typedef struct
+{
+    int applied;
+    float value;
+} Discount;
+
+Discount apply_discount(char club_member, float *totalPrice, int carsNeeded, float discountPercentage, float multibuy_discount)
+{
+    float discountValue;
+    int discountApplied = 0;
+    // check if member discount needs to be applied
+    if (club_member == 'Y' || club_member == 'y')
+    {
+        discountApplied = 1;
+        *totalPrice *= (1 - discountPercentage);
+        discountValue = discountPercentage;
+    }
+    // otherwise, check multibuy discount
+    else if (carsNeeded >= multibuy_discount)
+    {
+        discountApplied = 1;
+        *totalPrice *= (1 - multibuy_discount);
+        discountValue = multibuy_discount;
+    }
+
+    return (Discount){discountApplied, discountValue};
+}
+
+int main()
+{
     
     /* Constants */
 #define CAR_PRICE 20500.0f
