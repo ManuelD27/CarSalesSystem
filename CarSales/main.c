@@ -27,6 +27,8 @@ int main() {
     char lastName[20];
     char age[4]; // Allow up to 3 digits for age
     int userAge;
+    char userChoice;
+    
 
     // Get the user's first name
     const char *firstNamePrompt = "Enter your first name: ";
@@ -49,6 +51,12 @@ int main() {
     printf("a. Buy Cars\n");
     printf("b. View Sales Stats\n");
     printf("x. Exit\n\n");
+    
+    printf("Please select a option: ");
+    scanf(" %c", &userChoice);
+    getchar();
+    
+    
 
     // Stock info
     if (carsAvailable > 0) {
